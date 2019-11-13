@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const port = 4200;
+const port = process.env.PORT || 4200;
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -22,7 +22,7 @@ var users = [
 var cropTypes = [
     { id : 1, name: 'rice' },
     { id : 2, name: 'wheat' }
-]
+];
 
 router.post('/server/api/user', function (req, res) {
     const body = req.body;
