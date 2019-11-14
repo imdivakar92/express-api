@@ -1,0 +1,9 @@
+{
+    "data": [
+        { "username": "divakar", "password": "divakar", "id": "9786920506", "location": "TN" },
+        { "username": "mano", "password": "mano", "id": "1234567890", "location": "TN" },
+        { "username": "anand", "password": "anand", "id": "0987654321", "location": "NE" },
+        { "username": "mohit", "password": "mohit", "id": "9876543210", "location": "NE" },
+        { "username": "admin", "password": "admin", "id": "9999999999", "location": "TN" }
+    ]
+}

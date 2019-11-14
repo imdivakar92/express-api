@@ -12,18 +12,9 @@ const router = express.Router();
 
 var sessionID;
 
-var users = [
-    { username: 'divakar', password: 'divakar', id: '9786920506', location: 'TN' },
-    { username: 'mano', password: 'mano', id: '1234567890', location: 'TN' },
-    { username: 'anand', password: 'anand', id: '0987654321', location: 'NE' },
-    { username: 'mohit', password: 'mohit', id: '9876543210', location: 'NE' },
-    { username: 'admin', password: 'admin', id: '9999999999', location: 'TN' },
-];
+var users = JSON.parse(fs.readFileSync('./public/static/users.json'));
 
-var cropTypes = [
-    { id : 1, name: 'rice' },
-    { id : 2, name: 'wheat' }
-];
+var cropTypes = JSON.parse(fs.readFileSync('./public/static/crop-types.json'));
 
 router.post('/server/api/user', function (req, res) {
     const body = req.body;
@@ -32,7 +23,7 @@ router.post('/server/api/user', function (req, res) {
         data: null
     };
     let isValidUser = false;
-    users.forEach((element) => {
+    users.data.forEach((element) => {
         if(element.username === body.username && element.password === body.password) {
             responseData.status = true;
             responseData.data = element;
@@ -54,7 +45,7 @@ router.get('/server/api/crop/types', (req, res) => {
     };
     if(req.headers.authorization === sessionID) {
         responseData.status = true;
-        responseData.data = cropTypes;
+        responseData.data = cropTypes.data;
     } else {
         responseData.status = false;
         responseData.data = 'Unauthorized';

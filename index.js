@@ -55,12 +55,16 @@ router.post('/api/login', (req, res) => {
 
 router.post('/api/logout', (req, res) => {
     sess=req.session;
-    sess.destroy((err) => {
-        if(err) {
-            res.status(200).send('Please Login');
-        }
-        res.status(200).send('Logged Out Successfully');
-    });
+    if(sess.sessionID){    
+        sess.destroy((err) => {
+            if(err) {
+                res.status(200).send('Please Login').end();
+            }
+            res.status(200).send('Logged Out Successfully').end();
+        });
+    } else {
+        res.status(200).send('Please Login').end();
+    }
 });
 
 app.use('/', router);
@@ -72,8 +76,7 @@ function checkSession(req, res, next) {
         next();
     } else {
         sess=req.session;
-        console.log(sess);
-        if(!sess){
+        if(!sess.sessionID){
             res.status(200).send('Please Login').end();
         }
         next();
