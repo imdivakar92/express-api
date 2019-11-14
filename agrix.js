@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const fs = require('fs');
 const port = process.env.PORT || 4200;
 
 app.use(express.json());
@@ -12,11 +13,11 @@ const router = express.Router();
 var sessionID;
 
 var users = [
-    { username: 'divakar', password: 'divakar', id: '9786920506' },
-    { username: 'mano', password: 'mano', id: '1234567890' },
-    { username: 'anand', password: 'anand', id: '0987654321' },
-    { username: 'mohit', password: 'mohit', id: '9876543210' },
-    { username: 'admin', password: 'admin', id: '9999999999' },
+    { username: 'divakar', password: 'divakar', id: '9786920506', location: 'TN' },
+    { username: 'mano', password: 'mano', id: '1234567890', location: 'TN' },
+    { username: 'anand', password: 'anand', id: '0987654321', location: 'NE' },
+    { username: 'mohit', password: 'mohit', id: '9876543210', location: 'NE' },
+    { username: 'admin', password: 'admin', id: '9999999999', location: 'TN' },
 ];
 
 var cropTypes = [
@@ -54,6 +55,33 @@ router.get('/server/api/crop/types', (req, res) => {
     if(req.headers.authorization === sessionID) {
         responseData.status = true;
         responseData.data = cropTypes;
+    } else {
+        responseData.status = false;
+        responseData.data = 'Unauthorized';
+    }
+    res.status(200).json(responseData);
+});
+
+router.post('/server/api/location/geojson', (req, res) => {
+    const body = req.body;
+    const responseData = {
+        status: false,
+        data: null
+    };
+    if(req.headers.authorization === sessionID) {
+        let rawdata;
+        switch(body.location) {
+            case 'TN':
+                rawdata = fs.readFileSync('./public/tamilnadu.geojson');
+                break;
+            case 'NE':
+                rawdata = fs.readFileSync('./public/amsterdam.geojson');
+                break;
+            default:
+                rawdata = fs.readFileSync('./public/tamilnadu.geojson');
+        }
+        responseData.status = true;
+        responseData.data = JSON.parse(rawdata);
     } else {
         responseData.status = false;
         responseData.data = 'Unauthorized';
