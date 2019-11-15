@@ -61,7 +61,8 @@ router.post('/server/api/location/geojson', (req, res) => {
     };
     if(req.headers.authorization === sessionID) {
         let rawdata;
-        switch(body.location) {
+        const location = body.location.toLowerCase();
+        switch(location) {
             case 'TN':
                 rawdata = fs.readFileSync('./public/tamilnadu.geojson');
                 break;
@@ -70,6 +71,7 @@ router.post('/server/api/location/geojson', (req, res) => {
                 break;
             default:
                 rawdata = fs.readFileSync('./public/tamilnadu.geojson');
+                break;
         }
         responseData.status = true;
         responseData.data = JSON.parse(rawdata);

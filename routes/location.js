@@ -1,12 +1,14 @@
 const location = require('express').Router();
 const rp = require('request-promise');
 
-location.post('/geojson', (req, res) => {
+location.get('/geojson', (req, res) => {
     sess = req.session;
     var options = {
         uri: 'http://localhost:4200/server/api/location/geojson',
         method: 'POST',
-        body: req.body,
+        body: {
+            location: sess.location
+        },
         json: true,
         headers: {
             'Authorization': sess.sessionID
@@ -25,7 +27,7 @@ location.post('/geojson', (req, res) => {
                 responseBody.status = false;
                 responseBody.data = response.data;
             }
-            res.status(200).send(responseBody);
+            res.status(200).send(responseBody).end();;
         })
         .catch(function (err) {
             throw err;

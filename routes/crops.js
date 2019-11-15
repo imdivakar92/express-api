@@ -24,7 +24,7 @@ crops.get('/types', (req, res) => {
                 responseBody.status = false;
                 responseBody.data = response.data;
             }
-            res.status(200).send(responseBody);
+            res.status(200).send(responseBody).end();;
         })
         .catch(function (err) {
             throw err;
