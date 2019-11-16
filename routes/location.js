@@ -4,7 +4,7 @@ const rp = require('request-promise');
 location.get('/geojson', (req, res) => {
     sess = req.session;
     var options = {
-        uri: 'http://localhost:4200/server/api/location/geojson',
+        uri: 'http://localhost:3091/server/api/location/geojson',
         method: 'POST',
         body: {
             location: sess.location

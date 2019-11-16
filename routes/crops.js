@@ -4,7 +4,7 @@ const rp = require('request-promise');
 crops.get('/types', (req, res) => {
     sess = req.session;
     var options = {
-        uri: 'http://localhost:4200/server/api/crop/types',
+        uri: 'http://localhost:3091/server/api/crop/types',
         body: req.body,
         json: true,
         headers: {

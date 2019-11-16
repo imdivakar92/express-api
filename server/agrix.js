@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const fs = require('fs');
-const port = process.env.PORT || 4200;
+const port = process.env.PORT || 3091;
 
 app.use(express.json());
 app.use(express.urlencoded());
@@ -16,7 +16,9 @@ var users = JSON.parse(fs.readFileSync('./public/static/users.json'));
 
 var cropTypes = JSON.parse(fs.readFileSync('./public/static/crop-types.json'));
 
-router.post('/server/api/user', function (req, res) {
+var blockMap = JSON.parse(fs.readFileSync('./public/static/blockmap-filemaper.json'));
+
+router.post('/server/api/user', (req, res) => {
     const body = req.body;
     let responseData = {
         status: false,
@@ -54,15 +56,14 @@ router.get('/server/api/crop/types', (req, res) => {
 });
 
 router.post('/server/api/location/geojson', (req, res) => {
-    const body = req.body;
+    const { location } = req.body;
     const responseData = {
         status: false,
         data: null
     };
     if(req.headers.authorization === sessionID) {
         let rawdata;
-        const location = body.location.toLowerCase();
-        switch(location) {
+        switch(location.code) {
             case 'TN':
                 rawdata = fs.readFileSync('./public/tamilnadu.geojson');
                 break;
@@ -71,6 +72,36 @@ router.post('/server/api/location/geojson', (req, res) => {
                 break;
             default:
                 rawdata = fs.readFileSync('./public/tamilnadu.geojson');
+                break;
+        }
+        responseData.status = true;
+        responseData.data = JSON.parse(rawdata);
+    } else {
+        responseData.status = false;
+        responseData.data = 'Unauthorized';
+    }
+    res.status(200).json(responseData);
+});
+
+router.post('/server/api/division', (req, res) => {
+    const { level, blockId } = req.body;
+    const responseData = {
+        status: false,
+        data: null
+    };
+    if(req.headers.authorization === sessionID) {
+        let rawdata;
+        switch(level) {
+            case '0':
+                rawdata = fs.readFileSync('./public/full_district_map.geojson');
+                break;
+            case '1':
+                const filename = blockMap.data.find((element) => {
+                    return element.objectId === parseInt(blockId);
+                });
+                rawdata = fs.readFileSync(`./public/block_maps/${filename.geojson}`);
+                break;
+            default:
                 break;
         }
         responseData.status = true;

@@ -2,11 +2,12 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const session = require('express-session');
-const port = process.env.PORT || 3200;
+const port = process.env.PORT || 3090;
 const router = require('express').Router();
 const userRouter = require('./routes/user');
 const cropsRouter = require('./routes/crops');
 const locationRouter = require('./routes/location');
+const divisionRouter = require('./routes/division');
 
 // app level middlewares
 app.use(express.json());
@@ -16,6 +17,7 @@ app.use(session({secret: 'agrix',saveUninitialized: true,resave: true}));
 app.use('/api/crop', cropsRouter);
 app.use('/api/location', locationRouter);
 app.use('/api/user', userRouter);
+app.use('/api/division', divisionRouter);
 
 // route level middlewares
 router.use((req, res, next) => checkSession(req, res, next));

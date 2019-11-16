@@ -3,7 +3,7 @@ const rp = require('request-promise');
 
 user.post('/login', (req, res) => {
     var options = {
-        uri: 'http://localhost:4200/server/api/user',
+        uri: 'http://localhost:3091/server/api/user',
         method: 'POST',
         body: req.body,
         json: true
