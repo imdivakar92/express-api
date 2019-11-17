@@ -12,11 +12,11 @@ const router = express.Router();
 
 var sessionID;
 
-var users = JSON.parse(fs.readFileSync('./public/static/users.json'));
+var users = JSON.parse(fs.readFileSync('./server/public/static/users.json'));
 
-var cropTypes = JSON.parse(fs.readFileSync('./public/static/crop-types.json'));
+var cropTypes = JSON.parse(fs.readFileSync('./server/public/static/crop-types.json'));
 
-var blockMap = JSON.parse(fs.readFileSync('./public/static/blockmap-filemaper.json'));
+var blockMap = JSON.parse(fs.readFileSync('./server/public/static/blockmap-filemaper.json'));
 
 router.post('/server/api/user', (req, res) => {
     const body = req.body;
@@ -61,25 +61,10 @@ router.post('/server/api/location/geojson', (req, res) => {
         status: false,
         data: null
     };
-    if(req.headers.authorization === sessionID) {
-        let rawdata;
-        switch(location.code) {
-            case 'TN':
-                rawdata = fs.readFileSync('./public/tamilnadu.geojson');
-                break;
-            case 'NE':
-                rawdata = fs.readFileSync('./public/amsterdam.geojson');
-                break;
-            default:
-                rawdata = fs.readFileSync('./public/tamilnadu.geojson');
-                break;
-        }
-        responseData.status = true;
-        responseData.data = JSON.parse(rawdata);
-    } else {
-        responseData.status = false;
-        responseData.data = 'Unauthorized';
-    }
+    let rawdata;
+    rawdata = fs.readFileSync('./server/public/tamilnadu.geojson');
+    responseData.status = true;
+    responseData.data = JSON.parse(rawdata);
     res.status(200).json(responseData);
 });
 
@@ -89,27 +74,22 @@ router.post('/server/api/division', (req, res) => {
         status: false,
         data: null
     };
-    if(req.headers.authorization === sessionID) {
-        let rawdata;
-        switch(level) {
-            case '0':
-                rawdata = fs.readFileSync('./public/full_district_map.geojson');
-                break;
-            case '1':
-                const filename = blockMap.data.find((element) => {
-                    return element.objectId === parseInt(blockId);
-                });
-                rawdata = fs.readFileSync(`./public/block_maps/${filename.geojson}`);
-                break;
-            default:
-                break;
-        }
-        responseData.status = true;
-        responseData.data = JSON.parse(rawdata);
-    } else {
-        responseData.status = false;
-        responseData.data = 'Unauthorized';
+    let rawdata;
+    switch(level) {
+        case '0':
+            rawdata = fs.readFileSync('./server/public/full_district_map.geojson');
+            break;
+        case '1':
+            const filename = blockMap.data.find((element) => {
+                return element.objectId === parseInt(blockId);
+            });
+            rawdata = fs.readFileSync(`./server/public/block_maps/${filename.geojson}`);
+            break;
+        default:
+            break;
     }
+    responseData.status = true;
+    responseData.data = JSON.parse(rawdata);
     res.status(200).json(responseData);
 });
 

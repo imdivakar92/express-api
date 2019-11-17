@@ -9,6 +9,8 @@ const cropsRouter = require('./routes/crops');
 const locationRouter = require('./routes/location');
 const divisionRouter = require('./routes/division');
 
+var sess;
+
 // app level middlewares
 app.use(express.json());
 app.use(express.urlencoded());
@@ -21,12 +23,13 @@ app.use('/api/division', divisionRouter);
 
 // route level middlewares
 router.use((req, res, next) => checkSession(req, res, next));
-
 app.use('/', router);
 
 app.listen(port, () => console.log(`App listening on port ${port}!`));
 
 function checkSession(req, res, next) {
+    console.log('checkSession');
+    console.logI(req.url);
     if(req.url === '/api/login'){
         next();
     } else {

@@ -7,11 +7,11 @@ location.get('/geojson', (req, res) => {
         uri: 'http://localhost:3091/server/api/location/geojson',
         method: 'POST',
         body: {
-            location: sess.location
+            location: req.session.location
         },
         json: true,
         headers: {
-            'Authorization': sess.sessionID
+            'Authorization': req.session.sessionID
         }
     };
     rp(options)
